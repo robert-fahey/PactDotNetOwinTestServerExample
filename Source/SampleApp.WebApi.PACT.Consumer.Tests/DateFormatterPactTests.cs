@@ -17,19 +17,23 @@ namespace SampleApp.ConsoleApp.PACT.Consumer.Tests
         private HttpClient _httpClient;
         private DateApiClient _dateApiClient;
 
+        [OneTimeSetUp]
+        public void OneTimeSetup()
+        {
+            _pactData = new DateFormatterWebApiConsumerPact();
+        }
+
         [SetUp]
         public void Setup()
         {
-            _pactData = new DateFormatterWebApiConsumerPact();
-            _pactData.MockProviderService.ClearInteractions();
-                
             _httpClient = new HttpClient()
             {
                 BaseAddress = new Uri(_pactData.MockProviderServiceBaseUri)
-            };            
+            };
+            _pactData.MockProviderService.ClearInteractions();
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             _pactData?.Dispose();
@@ -82,15 +86,12 @@ namespace SampleApp.ConsoleApp.PACT.Consumer.Tests
         }
 
         [Test]
-        public void GetFormattedDate_NoAuthorisationShouldReturnUnauthorised()
+        public async Task GetFormattedDate_NoAuthorisationShouldReturnUnauthorised()
         {
-            //Arrange
-            
+            //Arrange            
             _pactData.MockProviderService
-                .Given("A utc date '2017-03-20T12:00:01.00Z' and language 'en-GB'")
-                .UponReceiving("A GET date formatting request")
-                .With(RequestBuilder.Request(HttpVerb.Get, "/api/dates/formattedDate")
-                    
+                .UponReceiving("A request with no authorization header")
+                .With(RequestBuilder.Request(HttpVerb.Get, "/api/dates/formattedDate")                    
                     .WithQueryParameter("date", "2017-03-20T12:00:01.00Z")
                     .WithQueryParameter("lang", "en-GB")
                     .Build())
@@ -98,24 +99,27 @@ namespace SampleApp.ConsoleApp.PACT.Consumer.Tests
                  {
                      Status = 401,
                      Headers = new Dictionary<string, object>
-                    {
+                     {
                         { "Content-Type", "application/json; charset=utf-8" }
-                    },
+                     },
                      Body = new
                      {
-                         message = "Authorization has been denied for this request."
+                         Message = "Authorization has been denied for this request."
                      }
                  });
 
             _dateApiClient = new DateApiClient(_httpClient);
 
-            
+            Func<Task> asyncFunction = async () =>
+            {
+                await _dateApiClient.GetFormatedDate("2017-03-20T12:00:01.00Z", "en-GB");
+            };
 
-            //Act //Assert
-            Assert.Throws<AggregateException>(() => _dateApiClient.GetFormatedDate("2017-03-20T12:00:01.00Z", "en-GB").Wait());
+            //Act
+            asyncFunction.ShouldThrow<HttpRequestException>();
 
+            //Assert
             _pactData.MockProviderService.VerifyInteractions();
-
         }
     }
 }

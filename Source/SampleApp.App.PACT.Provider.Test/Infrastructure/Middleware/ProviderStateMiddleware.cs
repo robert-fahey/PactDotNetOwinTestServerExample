@@ -61,7 +61,14 @@ namespace SampleApp.ConsoleApp.PACT.Provider.Tests.Infrastructure.Middleware
                     //A null or empty provider state key must be handled
                     if (!string.IsNullOrEmpty(providerState?.State) && providerState.Consumer == ConsumerName)
                     {
-                        _providerStates[providerState.State].Invoke();
+                        try
+                        {
+                            _providerStates[providerState.State].Invoke();
+                        }
+                        catch
+                        {
+                            await context.Response.WriteAsync("");
+                        }
                     }
 
                     await context.Response.WriteAsync("");
