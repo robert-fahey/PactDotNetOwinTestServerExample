@@ -29,7 +29,7 @@ namespace SampleApp.ConsoleApp.PACT.Consumer.Tests
                 .ServiceConsumer("SampleApp.ConsoleApp")
                 .HasPactWith("DateFormatter.WebApi");
 
-            MockProviderService = PactBuilder.MockService(MockServerPort, new JsonSerializerSettings());
+            MockProviderService = PactBuilder.MockService(MockServerPort, new JsonSerializerSettings {});
 
         }
 

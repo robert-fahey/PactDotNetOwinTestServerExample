@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using PactNet.Matchers;
 using PactNet.Mocks.MockHttpService.Models;
 using SampleApp.Infrastructure.Clients;
 using SampleApp.Infrastructure.Models;
@@ -43,7 +44,7 @@ namespace SampleApp.ConsoleApp.PACT.Consumer.Tests
         public async Task GetFormattedDate_ShouldReturnFoundResult()
         {
             //Arrange
-            var expectedResult = new FormattedDateModel
+            var expectedResult = new 
             {
                 FormattedDate = "20 March 2017 12:00:01",
                 Date = DateTime.Parse("2017-03-20T12:00:01.00Z"),
@@ -67,8 +68,13 @@ namespace SampleApp.ConsoleApp.PACT.Consumer.Tests
                             {$"Content-Type", "application/json; charset=utf-8"}
                         },
                         Status = (int) HttpStatusCode.OK,
-                        Body = expectedResult
-                    });
+                        Body = new
+                        {
+                            FormattedDate = "20 March 2017 12:00:01",
+                            Date = Match.Regex(DateTime.Parse("2017-03-20T12:00:01.00Z").ToString("o"), "^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[0-1]|0[1-9]|[1-2][0-9])T(2[0-3]|[0-1][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]+)?(Z|[+-](?:2[0-3]|[0-1][0-9]):[0-5][0-9])?$"),
+                            Language = "en-GB"
+                        }
+            });
 
             _dateApiClient = new DateApiClient(_httpClient, testAuthToken);
 
@@ -90,6 +96,7 @@ namespace SampleApp.ConsoleApp.PACT.Consumer.Tests
         {
             //Arrange            
             _pactData.MockProviderService
+                .Given("A state that doesn''t exist")
                 .UponReceiving("A request with no authorization header")
                 .With(RequestBuilder.Request(HttpVerb.Get, "/api/dates/formattedDate")                    
                     .WithQueryParameter("date", "2017-03-20T12:00:01.00Z")

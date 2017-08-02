@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Net.Http;
 using BoDi;
 using Microsoft.Owin.Testing;
+using NUnit.Framework;
+using SampleApp.Infrastructure.Clients;
 using SampleApp.WebApi;
 using TechTalk.SpecFlow;
 
+[assembly: Parallelizable(ParallelScope.Fixtures)]
 namespace SampleApp.Specs.Configuration
 {
     [Binding]
+
     public class ConfigurationBinding
     {
         private readonly IObjectContainer _objectContainer;
@@ -16,12 +21,12 @@ namespace SampleApp.Specs.Configuration
             _objectContainer = objectContainer;
         }
 
-        [BeforeScenario( Order = 0)]
+        [BeforeScenario(Order = 0)]
         public void InitializeDependencies()
         {
             var testServer = CreateTestServer();
             _objectContainer.RegisterInstanceAs(testServer);
-            _objectContainer.RegisterInstanceAs(testServer.HttpClient );
+            _objectContainer.RegisterInstanceAs(testServer.HttpClient);
         }
 
         [AfterScenario]
@@ -31,7 +36,7 @@ namespace SampleApp.Specs.Configuration
             testServer.Dispose();
         }
 
-        private static TestServer CreateTestServer()
+        private TestServer CreateTestServer()
         {
             var testServer = TestServer.Create(appBuilder =>
             {
