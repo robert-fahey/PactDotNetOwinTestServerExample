@@ -92,7 +92,7 @@ namespace SampleApp.ConsoleApp.PACT.Consumer.Tests
         }
 
         [Test]
-        public async Task GetFormattedDate_NoAuthorisationShouldReturnUnauthorised()
+        public void GetFormattedDate_NoAuthorisationShouldReturnUnauthorised()
         {
             //Arrange            
             _pactData.MockProviderService
