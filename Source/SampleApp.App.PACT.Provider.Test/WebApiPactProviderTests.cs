@@ -4,7 +4,6 @@ using Microsoft.Owin.Hosting;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.OAuth;
 using NUnit.Framework;
-using Owin;
 using PactNet;
 using SampleApp.ConsoleApp.PACT.Provider.Tests.Infrastructure.Middleware;
 using SampleApp.ConsoleApp.PACT.Provider.Tests.Infrastructure.ProviderState;
