@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using Microsoft.Owin.Hosting;
 using Microsoft.Owin.Security.DataProtection;
@@ -42,6 +43,7 @@ namespace SampleApp.ConsoleApp.PACT.Provider.Tests
         {
             //Arrange
             var config = new PactVerifierConfig();
+
             _providerStateManager.AddState(
                 "A utc date '2017-03-20T12:00:01.00Z' and language 'en-GB'",
                 () => DateTime.Parse("2017-03-20T12:00:01.00Z"));
@@ -55,7 +57,7 @@ namespace SampleApp.ConsoleApp.PACT.Provider.Tests
                     .ProviderState($"{ServiceUri}/provider-states")
                     .ServiceProvider("DateFormatter.WebApi", ServiceUri)
                     .HonoursPactWith("SampleApp.ConsoleApp")
-                    .PactUri($"C:/temp/PACT/sampleapp.consoleapp-dateformatter.webapi.json")
+                    .PactUri($"{ConfigurationManager.AppSettings["DateFormatter.WebApiPact.Dir"]}/sampleapp.consoleapp-dateformatter.webapi.json")
                     .Verify();
             }
         }
