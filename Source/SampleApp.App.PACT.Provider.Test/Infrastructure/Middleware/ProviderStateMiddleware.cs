@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using Newtonsoft.Json;
+using SampleApp.ConsoleApp.PACT.Provider.Tests.Infrastructure.ProviderState;
 
 namespace SampleApp.ConsoleApp.PACT.Provider.Tests.Infrastructure.Middleware
 {
@@ -22,21 +23,10 @@ namespace SampleApp.ConsoleApp.PACT.Provider.Tests.Infrastructure.Middleware
         private readonly Func<IDictionary<string, object>, Task> _mNext;
         private readonly IDictionary<string, Action> _providerStates;
         
-        public ProviderStateMiddleware(Func<IDictionary<string, object>, Task> next)
+        public ProviderStateMiddleware(Func<IDictionary<string, object>, Task> next, IProviderStateManager providerStateManager)
         {
             _mNext = next;
-            _providerStates = new Dictionary<string, Action>
-            {
-                {
-                    "A utc date '2017-03-20T12:00:01.00Z' and language 'en-GB'",
-                    AddTesterIfItDoesntExist
-                }
-            };
-        }
-
-        private void AddTesterIfItDoesntExist()
-        {
-            //Add code to go an inject or insert the tester data
+            _providerStates = providerStateManager.GetStates();        
         }
 
         public async Task Invoke(IDictionary<string, object> environment)

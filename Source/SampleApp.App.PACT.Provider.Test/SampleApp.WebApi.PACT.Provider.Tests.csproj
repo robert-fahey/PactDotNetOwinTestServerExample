@@ -95,9 +95,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\ProviderState\IProviderStateManager.cs" />
+    <Compile Include="Infrastructure\ProviderState\ProviderStateManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\Middleware\ProviderStateMiddleware.cs" />
-    <Compile Include="TestServer.cs" />
+    <Compile Include="TestServerAPI.cs" />
     <Compile Include="WebApiPactProviderTests.cs" />
   </ItemGroup>
   <ItemGroup>
