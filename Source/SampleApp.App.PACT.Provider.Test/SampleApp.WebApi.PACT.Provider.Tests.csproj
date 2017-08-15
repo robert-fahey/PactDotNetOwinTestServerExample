@@ -99,7 +99,6 @@
     <Compile Include="Infrastructure\ProviderState\ProviderStateManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\Middleware\ProviderStateMiddleware.cs" />
-    <Compile Include="TestServerAPI.cs" />
     <Compile Include="WebApiPactProviderTests.cs" />
   </ItemGroup>
   <ItemGroup>
