@@ -57,7 +57,10 @@ namespace SampleApp.ConsoleApp.PACT.Provider.Tests.Infrastructure.Middleware
                         }
                         catch
                         {
-                            await context.Response.WriteAsync("");
+                            context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                            var message =
+                                $"{{\"Message\":\"Provider state not found\", \"ProviderState\": \"{providerState.State}\" }}";
+                            await context.Response.WriteAsync(message);
                         }
                     }
 

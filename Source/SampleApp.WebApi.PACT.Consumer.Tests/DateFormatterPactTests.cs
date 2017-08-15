@@ -96,7 +96,6 @@ namespace SampleApp.ConsoleApp.PACT.Consumer.Tests
         {
             //Arrange            
             _pactData.MockProviderService
-                .Given("A state that doesn''t exist")
                 .UponReceiving("A request with no authorization header")
                 .With(RequestBuilder.Request(HttpVerb.Get, "/api/dates/formattedDate")                    
                     .WithQueryParameter("date", "2017-03-20T12:00:01.00Z")
